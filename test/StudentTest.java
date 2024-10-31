@@ -5,8 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.*;
 import java.util.Random;
 
-import static java.lang.Math.log;
-
 public class StudentTest {
 
     @Test
@@ -31,7 +29,7 @@ public class StudentTest {
         }
     }
 
-    /**
+        /**
      * TODO: Test cases
      */
     @Test
@@ -41,56 +39,20 @@ public class StudentTest {
     }
 
     /*
-     * Helper Methods to Validate Properties of 
-     * BST and AVL Tree.
+         Helper Methods to Validate AVL Property
      */
-    
-    // Check that the tree is ordered
-    public static void
-    validate_BST_property(OrderedSet<Integer> tree) {
-        validate_BST_property(tree.root());
-    }
-    // Check that the subtree satisfies the BST Property.
-    // Returns the min and max keys in the subtree of n.
-    public static Pair<Integer,Integer>
-    validate_BST_property(Location<Integer> n) {
-        if (n == null) {
-            return null;
-        } else {
-            Pair<Integer,Integer> left_range =
-                validate_BST_property(n.left_child());
-            Pair<Integer,Integer> right_range =
-                validate_BST_property(n.right_child());
-            if (left_range == null) {
-                left_range = new Pair<>(n.get(), n.get());
-            } else {
-                assertTrue(left_range.getValue() < n.get());
-            }
-            if (right_range == null) {
-                right_range = new Pair<>(n.get(), n.get());
-            } else {
-                assertTrue(n.get() < right_range.getKey());
-            }
-            return combine(left_range, right_range);
-        }
+    private static int calc_height(BinarySearchTree.Node<Integer> n) {
+        if (n == null) return -1;
+        else return 1 + Math.max(calc_height(n.left), calc_height(n.right));
     }
 
-
-    // Check that the tree is an AVL tree.
-    public static <K> void validate_AVL_property(OrderedSet<K> tree) {
-        validate_AVL_property(tree.root());
+    private static boolean validate_height(BinarySearchTree.Node<Integer> n) {
+        if (n == null) return true;
+        if (Math.abs(calc_height(n.left) - calc_height(n.right)) > 1) return false;
+        return validate_height(n.left) && validate_height(n.right);
     }
-    // Checks that the subtree rooted at location n is and AVL tree
-    // and returns the height of this subtree.
-    public static <K> int validate_AVL_property(Location<K> n) {
-        if (n == null) {
-            return -1;
-        } else {
-            int h1, h2;
-            h1 = validate_AVL_property(n.left_child());
-            h2 = validate_AVL_property(n.right_child());
-            assertTrue(Math.abs(h2 - h1) < 2);
-            return 1 + max(h1, h2);
-        }
+
+    private static void validate_height(BinarySearchTree<Integer> avl) {
+        assertTrue(validate_height((BinarySearchTree.Node<Integer>) avl.root));
     }
 }
